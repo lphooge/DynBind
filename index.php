@@ -33,11 +33,15 @@ $protocol->setAuthMethod($conf->getAuthMethod()=='basic'?DynDotComProtocol::AUTH
 try{
 	$protocol->parseRequest($_SERVER, $_GET, $_POST);
 
-	// $user = $prot->getUser(); // TODO: check if allowed
+	$user = $protocol->getUser();
 
 	$update_stati = array();
 	foreach($protocol->getEntries() as $entry){
-		$update_stati[] = $dnsupdater->update($entry);
+		if($user->ownsDnsEntry($entry)){
+			$update_stati[] = $dnsupdater->update($entry);
+		} else {
+			$update_stati[] = new UpdateStatus(UpdateStatus::STATUS_AUTH_ERROR, $entry);
+		}
 	}
 	$protocol->answerRequest($update_stati);
 	exit();
@@ -50,11 +54,4 @@ try{
 	}
 }
 
-echo $e->getMessage();
-exit;
-
-/*
- * classes and functions below
- */
-
-
+echo $e->getMessage(); // FIXME: log instead

@@ -7,7 +7,7 @@
 	</general>
 	<users>
 		<user name="joe" password="doe">
-			<hostname>*.invalid.inv</hostname>
+			<hostname>*.invalid.inv</hostname> <!-- note that *.foo.com does not include foo.com itself! -->
 		</user>
 		<user name="dummy">
 			<hostname>*.foo.invalid.inv</hostname>

@@ -44,4 +44,15 @@ class DnsEntry{
 				throw new Exception("Unsupported Entry Type", UpdateStatus::DNSENTRY_INVALID);
 		}
 	}
+
+	/**
+	 * Returns the name of the entry as a Hostname Object
+	 *
+	 * @throws Exception
+	 * @return Hostname
+	 */
+	public function toHostname(){
+		validate::host($this->name, validate::HOST_FQDN_YES, "dns entry has no hostname", UpdateStatus::DNSENTRY_INVALID);
+		return new Hostname(trim($this->name, '.'));
+	}
 }

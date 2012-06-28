@@ -24,7 +24,7 @@ abstract class DynProtocol{
 	}
 
 	/**
-	 * Parse the Request
+	 * Parse the Request and perform user authentication, but no authorization
 	 * @param $env $_SERVER
 	 * @param $get $_GET
 	 * @param $post $_POST

@@ -44,6 +44,23 @@ class User{
 		}
 	}
 
+	public function ownsHost(Hostname $host){
+		foreach($this->hostnames as $hostname){
+			if($host->isContainedIn($hostname)){
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public function ownsDnsEntry(DnsEntry $entry){
+		try{
+			return $this->ownsHost($entry->toHostname());
+		} catch(Exception $e){
+			return false;
+		}
+	}
+
 	public function __toString(){
 		return (string) $this->name;
 	}
