@@ -8,13 +8,17 @@ so it can be used in "FritzBox" and maybe other home routers to automatically pe
 
 on the back side it depends on BIND and the nsupdate tool to perform the updates to the zone file
 
+
 REQUIREMENTS
+
 - a server with a static ip for running the dns server
 - bind9
 - nsupdate (in ubunto this is part of the dnsutils package)
 - apache + mod_php or something equivalent
 
+
 INSTALLATION
+
 0. make sure your "bind" serve is correctly set up.
 In particular:
 - the zone must allow updates (e.g. "allow-update {localhost;};" to allow local updates)
@@ -30,6 +34,15 @@ Alternatively place the config in /etc/dynbind.conf.xml instead in the directory
 3. if everything is correct you should be able to make dns updates by calling the skript in your web browsers like this 
 http://yourdomain.com/DynBind/?hostname=thehosttoupdate.com
 and entering your configured user credentials
+
+
+CONFIGURATION FOR FritzBox
+
+Use the following update url:
+yourdomain.com/dynbind/?hostname=<domain>&myip=<ipaddr>&wildcard=1
+replace "yourdomain.com" with your domain name, but leave the variables in brackets (<>) EXACTLY like this. 
+They will be replaced by the router.
+Do NOT put the scheme (http://) or your username/password into the url field, this will not work (at least on my hardware)
 
 
 CONFIG FILE EXAMPLES (for local test zone)
