@@ -1,13 +1,13 @@
 /.buildpath
-/.settings/
+/.settings
 /.project
 /*.key
 /*.private
 /.build.properties
-/.externalToolBuilders/
+/.externalToolBuilders
 /build.properties
 /zupd-*
 /favicon.ico
 /nsupdate.log
-/internal-notes/
+/internal-notes
 /dynbind.conf.xml
