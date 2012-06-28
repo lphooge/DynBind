@@ -1,0 +1,13 @@
+/.buildpath
+/.settings/
+/.project
+/*.key
+/*.private
+/.build.properties
+/.externalToolBuilders/
+/build.properties
+/zupd-*
+/favicon.ico
+/nsupdate.log
+/internal-notes/
+/build.xml

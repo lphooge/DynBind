@@ -1,0 +1,12 @@
+Order Deny,Allow
+Deny from all
+
+DirectoryIndex index.php
+<filesMatch index.php|favicon.ico>
+    Order Allow,Deny
+    Allow from all
+</filesMatch>
+<files "">
+    Order Allow,Deny
+    Allow from all
+</files>
