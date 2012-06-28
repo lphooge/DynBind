@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<config> <!-- copy this file to dynbind.conf.xml and insert your data -->
+<config>
 	<general>
 		<logfile>nsupdate.log</logfile>
 		<dryrun>0</dryrun> 
