@@ -1,0 +1,64 @@
+DynBind
+
+2012 by Lutz-Peter Hooge 
+
+this script is intended for running a selfhosted dynamic dns service
+it implements the update protocol used by dyn.com (see http://dyn.com/support/developers/api/perform-update/),
+so it can be used in "FritzBox" and maybe other home routers to automatically perform updates.
+
+on the back side it depends on BIND and the nsupdate tool to perform the updates to the zone file
+
+REQUIREMENTS
+- a server with a static ip for running the dns server
+- bind9
+- nsupdate (in ubunto this is part of the dnsutils package)
+- apache + mod_php or something equivalent
+
+INSTALLATION
+0. make sure your "bind" serve is correctly set up.
+In particular:
+- the zone must allow updates (e.g. "allow-update {localhost;};" to allow local updates)
+- the zone file must be writeble for the bind process
+- beware of minimum TTL setting. if this is set to, like 3 days, your dynamic updates will not have much effect...
+
+1. copy the included files somewhere where your webserver can access than.
+
+2. copy the included dynbind.conf.xml.example to dynbind.conf.xml or /etc/dynbind.conf.xml and insert your settings (users, zone, name server etc, see comments there).
+IMPORTANT: make sure for Apache "AllowOverride All" is enabled, or use other means to disallow the webserver from serving the config und log files to visitors!
+Alternatively place the config in /etc/dynbind.conf.xml instead in the directory with the script
+
+3. if everything is correct you should be able to make dns updates by calling the skript in your web browsers like this 
+http://yourdomain.com/DynBind/?hostname=thehosttoupdate.com
+and entering your configured user credentials
+
+
+CONFIG FILE EXAMPLES (for local test zone)
+
+----/etc/named.conf.local--------------------------
+zone "invalid.inv" IN {
+        type master;
+        file "/etc/bind/invalid.inv.zone";
+        allow-transfer { "none"; };
+        allow-update {localhost;};
+        allow-query {any;};
+        notify no;
+};
+---------------------------------------------------
+
+----/etc/bind/invalid.inv.zone---------------------
+$ORIGIN invalid.inv.
+$TTL 3600
+@       IN     SOA    ns.invalid.inv. lphooge.hoogi.de. (
+        2012062705  ; Serial
+        3H          ; refresh after 3 hours
+        1H          ; retry after 1 hour
+        1W          ; expire after 1 week
+        1800)         ; minimum TTL of 30min
+
+        ; Name Server
+        IN      NS      ns.invalid.inv.
+
+ns      IN A            10.0.2.15
+@       IN A            10.0.2.15
+---------------------------------------------------
+
