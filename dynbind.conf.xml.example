@@ -1,22 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<config>
+<config> <!-- copy this file to dynbind.conf.xml and insert your data -->
 	<general>
-		<logfile>nsupdate.log</logfile>
-		<dryrun>0</dryrun> 
-		<authmethod>digest</authmethod> <!-- digest or basic -->
+		<logfile>nsupdate.log</logfile> <!-- path to log file, absolute or relative, if empty no logging is done -->
+		<dryrun>0</dryrun> <!-- if 1, no updates are done, only logging -->
+		<authmethod>digest</authmethod> <!-- digest or basic http authentification. beware, basic authentication allows password sniffing -->
 	</general>
-	<users>
-		<user name="joe" password="doe">
-			<hostname>*.invalid.inv</hostname> <!-- note that *.foo.com does not include foo.com itself! -->
+	<users> <!-- insert users here-->
+		<user name="joe" password="doe"> <!-- user name and password, used for authentification. currently passwords are cleartext, sorry for that -->
+			<!-- 
+			list of host names this user may update.
+			with or without wildcard.
+			note that *.foo.com does also allow to update test.foo.com, but not foo.com itself
+			-->
+			<hostname>*.invalid.inv</hostname> 
+			<hostname>otherwiseinvalid.inv</hostname>
 		</user>
-		<user name="dummy">
+		<user name="dummy"> <-- no password currently means empty password, use with care -->
 			<hostname>*.foo.invalid.inv</hostname>
 		</user>
 	</users>
 	<zones>
-		<zone name="invalid.inv">
-			<keyfile />
-			<nameserver>ns.invalid.inv</nameserver>
+		<!-- 
+		List of zones that can be updated.
+		Currently only the first is used!
+		-->
+		<zone name="invalid.inv"> <!-- zone name -->
+			<keyfile /> <!-- key file to use for update, can be empty if updates are allowed without secret, eg for localhost -->
+			<nameserver>ns.invalid.inv</nameserver> <!-- nameserver where the updates are send -->
 		</zone>
 	</zones>
 </config>
