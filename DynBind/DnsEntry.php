@@ -1,4 +1,7 @@
 <?php
+/**
+ * @license http://www.gnu.org/licenses/lgpl-3.0.txt GNU LESSER GENERAL PUBLIC LICENSE
+*/
 require_once 'validate.php';
 class DnsEntry{
 	public function __construct($name=null, $entry=null, $type=null){

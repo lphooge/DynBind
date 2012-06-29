@@ -1,4 +1,7 @@
 <?php
+/**
+ * @license http://www.gnu.org/licenses/lgpl-3.0.txt GNU LESSER GENERAL PUBLIC LICENSE
+*/
 class UpdateStatus{
 	const STATUS_SUCCESS = 1; // ok
 	const STATUS_NO_CHANGE = 8; // ok, but nothing changed

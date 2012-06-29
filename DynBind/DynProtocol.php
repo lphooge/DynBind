@@ -1,4 +1,7 @@
 <?php
+/**
+ * @license http://www.gnu.org/licenses/lgpl-3.0.txt GNU LESSER GENERAL PUBLIC LICENSE
+*/
 require_once "UserBackend.php";
 require_once "User.php";
 

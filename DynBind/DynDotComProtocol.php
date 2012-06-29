@@ -1,4 +1,7 @@
 <?php
+/**
+ * @license http://www.gnu.org/licenses/lgpl-3.0.txt GNU LESSER GENERAL PUBLIC LICENSE
+*/
 require_once 'DynProtocol.php';
 require_once 'UpdateStatus.php';
 require_once 'HttpAuth/DigestHttpAuth.php';

@@ -2,6 +2,9 @@
 /**
  * Insert as followed into FritzBox: somedomain.net/path/dynbind.php?hostname=<domain>&myip=<ipaddr>
  * user and password will be automatically send
+ *
+ *
+ * @license http://www.gnu.org/licenses/lgpl-3.0.txt GNU LESSER GENERAL PUBLIC LICENSE
  */
 
 require_once 'DynBind/Config.php';
