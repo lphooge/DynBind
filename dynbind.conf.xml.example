@@ -3,7 +3,7 @@
 	<general>
 		<logfile>nsupdate.log</logfile> <!-- path to log file, absolute or relative, if empty no logging is done -->
 		<dryrun>0</dryrun> <!-- if 1, no updates are done, only logging -->
-		<authmethod>digest</authmethod> <!-- digest or basic http authentification. beware, basic authentication allows password sniffing -->
+		<authmethod>basic</authmethod> <!-- digest or basic http authentification. beware, basic authentication allows password sniffing, but fritzbox does not support digest -->
 	</general>
 	<users> <!-- insert users here-->
 		<user name="joe" password="doe"> <!-- user name and password, used for authentification. currently passwords are cleartext, sorry for that -->
