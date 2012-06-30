@@ -16,6 +16,7 @@ class NsUpdateDnsUpdater extends DnsUpdater{
 	public $keyfile = null;
 	public $dryrun = false;
 	public $logfile = "log.txt";
+	public $ttl = 3600;
 
 	public function __construct($nameserver, $zone, $keyfile){
 		$this->nameserver = $nameserver;
@@ -33,11 +34,12 @@ class NsUpdateDnsUpdater extends DnsUpdater{
 
 		$updatefile = uniqid('zupd-');
 		$nl = "\n";
+		$ttl = $entry->ttl?$entry->ttl:$this->ttl;
 		$update =
 			"server $this->nameserver".$nl.
 			"zone $this->zone".$nl.
 			"update delete $entry->name $entry->type".$nl.
-			"update add $entry->name $entry->ttl $entry->type $entry->entry".$nl.
+			"update add $entry->name $ttl $entry->type $entry->entry".$nl.
 			"show".$nl.
 			"send".$nl.
 			"";

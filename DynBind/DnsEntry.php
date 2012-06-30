@@ -15,7 +15,7 @@ class DnsEntry{
 	public $entry = null; // eg IP adress, adress for A records
 	public $class = 'IN';
 	public $type = 'A';
-	public $ttl = 3600;
+	public $ttl = null;
 
 	public $pref = null; // only for MX
 

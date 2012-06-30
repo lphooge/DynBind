@@ -28,6 +28,7 @@ if(!$conf->isLoaded()){
 $dnsupdater = new NsUpdateDnsUpdater($conf->getNameserver(), $conf->getZone(), $conf->getKeyfile());
 $dnsupdater->logfile = $conf->getLogfile();
 $dnsupdater->dryrun = $conf->getDryrun();
+$dnsupdater->ttl = $conf->getTTL();
 
 // Init Input Protocols
 $protocol = new DynDotComProtocol($conf);

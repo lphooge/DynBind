@@ -94,6 +94,11 @@ class Config implements UserBackend {
 		return (string) (string) $this->getSXML()->zones->zone->keyfile;
 	}
 
+	public function getTTL(){
+		$ttl = (int) $this->getSXML()->zones->zone->ttl;
+		return $ttl?$ttl:3600;
+	}
+
 	public function getLogfile(){
 		return (string) $this->getSXML()->general->logfile;
 	}
