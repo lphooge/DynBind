@@ -46,7 +46,7 @@ class NsUpdateDnsUpdater extends DnsUpdater{
 			log::write("could not write temp-file for nsupdate ($updatefile)", 1);
 			return new UpdateStatus(UpdateStatus::STATUS_UPDATE_ERROR, $entry);
 		}
-		$cmd = "nsupdate ".($this->keyfile?'-k '.$this->keyfile:'')." -v $updatefile";
+		$cmd = 'nsupdate '.($this->keyfile?'-k '.escapeshellarg($this->keyfile):'').' -v '.escapeshellarg($updatefile);
 		if($this->dryrun){
 			log::write($cmd, 3);
 			log::write($update, 2);
