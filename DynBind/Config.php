@@ -3,6 +3,8 @@
  * @license http://www.gnu.org/licenses/lgpl-3.0.txt GNU LESSER GENERAL PUBLIC LICENSE
 */
 require "UserBackend.php";
+require "Zone.php";
+
 class Config implements UserBackend {
 	protected $xmlfile = null;
 	/**
@@ -68,6 +70,33 @@ class Config implements UserBackend {
 			return $user;
 		}
 		throw new Exception("User $username not found");
+	}
+
+	/**
+	 * @return array of Zones
+	 */
+	public function getZones(){
+		$zones = array();
+		$global_dryrun = $this->getDryrun();
+		foreach($this->getSXML()->zones->children() as $e){ /* var $e SimpleXMLElement */
+			$name = (string) $e->attributes()->name;
+			$nameserver = (string) $e->nameserver;
+			$keyfile = (string) $e->keyfile;
+			$ttl = (string) $e->ttl;
+
+			$dryrun = $global_dryrun?true:((bool) (int) $e->dryrun);
+
+			$zone = new Zone($name, $nameserver);
+			$zone->dryrun = $dryrun;
+			if($keyfile){
+				$zone->keyfile = $keyfile;
+			}
+			if($ttl){
+				$zone->ttl = $ttl;
+			}
+			$zones[] = $zone;
+		}
+		return $zones;
 	}
 
 	public function getAuthMethod(){

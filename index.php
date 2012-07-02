@@ -27,11 +27,6 @@ if(!$conf->isLoaded()){
 log::setFile($conf->getLogfile());
 log::setLevel($conf->getLoglevel());
 
-// Init DNS-Update Tool
-$dnsupdater = new NsUpdateDnsUpdater($conf->getNameserver(), $conf->getZone(), $conf->getKeyfile());
-$dnsupdater->dryrun = $conf->getDryrun();
-$dnsupdater->ttl = $conf->getTTL();
-
 // Init Input Protocols
 $protocol = new DynDotComProtocol($conf);
 $protocol->setAuthMethod($conf->getAuthMethod()=='basic'?DynDotComProtocol::AUTH_BASIC:DynDotComProtocol::AUTH_DIGEST);
@@ -43,8 +38,13 @@ try{
 
 	$update_stati = array();
 	foreach($protocol->getEntries() as $entry){
-		if($user->ownsDnsEntry($entry)){
-			$update_stati[] = $dnsupdater->update($entry);
+		if($user->ownsDnsEntry($entry)){ /* @var $entry DnsEntry */
+			foreach($conf->getZones() as $zone){  /* @var $zone Zone */
+				if($zone->containsDnsEntry($entry)){
+					$update_stati[] = $zone->getUpdater()->update($entry);
+					break;
+				}
+			}
 		} else {
 			log::write("denied user $user->name updating $entry->name to $entry->entry", 3);
 			$update_stati[] = new UpdateStatus(UpdateStatus::STATUS_AUTH_ERROR, $entry);
@@ -53,10 +53,7 @@ try{
 	$protocol->answerRequest($update_stati);
 	exit();
 } catch(Exception $e){
-	if($e->getCode() == UpdateStatus::STATUS_UNHANDLED_REQUEST){
-		continue;
-	} else {
-		$protocol->answerRequest(array(new UpdateStatus($e->getCode())));
-		exit();
-	}
+	log::write($e->getMessage(), 3);
+	$protocol->answerRequest(array(new UpdateStatus($e->getCode())));
+	exit();
 }

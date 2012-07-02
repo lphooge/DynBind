@@ -24,8 +24,10 @@ class NsUpdateDnsUpdater extends DnsUpdater{
 	}
 
 	public function update(DnsEntry $entry){
+		$ttl = (int) ($entry->ttl?$entry->ttl:$this->ttl);
 		try{
 			$entry->validate();
+			validate::int_between($ttl, DnsEntry::TTL_MIN, DnsEntry::TTL_MAX, "invalid TTL '$ttl'", UpdateStatus::DNSENTRY_INVALID);
 		} catch(Exception $e){
 			log::write('rejected invalid dns entry: '.$e->getMessage(), 2);
 			return new UpdateStatus(UpdateStatus::STATUS_UPDATE_ERROR, $entry);
@@ -33,7 +35,6 @@ class NsUpdateDnsUpdater extends DnsUpdater{
 
 		$updatefile = tempnam(sys_get_temp_dir(),'zupd-');
 		$nl = "\n";
-		$ttl = $entry->ttl?$entry->ttl:$this->ttl;
 		$update =
 			"server $this->nameserver".$nl.
 			"zone $this->zone".$nl.

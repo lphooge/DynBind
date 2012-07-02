@@ -23,12 +23,12 @@
 	<zones>
 		<!-- 
 		List of zones that can be updated.
-		Currently only the first is used!
 		-->
 		<zone name="invalid.inv"> <!-- zone name -->
 			<keyfile /> <!-- key file to use for update, can be empty if updates are allowed without secret, eg for localhost -->
 			<nameserver>ns.invalid.inv</nameserver> <!-- nameserver where the updates are send -->
 			<ttl>1800</ttl> <!-- ttl of the inserted entries, in seconds -->
+			<dryrun>0</dryrun> <!-- optional, same as general/dryrun, just for this zone -->
 		</zone>
 	</zones>
 </config>
