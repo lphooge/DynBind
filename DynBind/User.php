@@ -36,7 +36,7 @@ class User{
 					$this->hostnames[] = $hostname;
 				}
 			} catch(Exception $e){
-				// todo: logging?
+				log::write("skipped invalid hosts: '$hostname' belonging to user '$this->name'");
 			}
 		}
 	}

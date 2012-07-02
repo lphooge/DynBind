@@ -7,6 +7,7 @@
  * @license http://www.gnu.org/licenses/lgpl-3.0.txt GNU LESSER GENERAL PUBLIC LICENSE
  */
 
+require_once 'DynBind/log.php';
 require_once 'DynBind/Config.php';
 require_once 'DynBind/NsUpdateDnsUpdater.php';
 require_once 'DynBind/DynDotComProtocol.php';
@@ -23,10 +24,11 @@ foreach(array('dynbind.conf.xml', '/etc/dynbind.conf.xml') as $conffile){
 if(!$conf->isLoaded()){
 	die(UpdateStatus::STATUS_INTERNAL_ERROR." - service not configured");
 }
+log::setFile($conf->getLogfile());
+log::setLevel($conf->getLoglevel());
 
 // Init DNS-Update Tool
 $dnsupdater = new NsUpdateDnsUpdater($conf->getNameserver(), $conf->getZone(), $conf->getKeyfile());
-$dnsupdater->logfile = $conf->getLogfile();
 $dnsupdater->dryrun = $conf->getDryrun();
 $dnsupdater->ttl = $conf->getTTL();
 
@@ -44,6 +46,7 @@ try{
 		if($user->ownsDnsEntry($entry)){
 			$update_stati[] = $dnsupdater->update($entry);
 		} else {
+			log::write("denied user $user->name updating $entry->name to $entry->entry", 3);
 			$update_stati[] = new UpdateStatus(UpdateStatus::STATUS_AUTH_ERROR, $entry);
 		}
 	}
@@ -57,5 +60,3 @@ try{
 		exit();
 	}
 }
-
-echo $e->getMessage(); // FIXME: log instead

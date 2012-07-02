@@ -103,6 +103,11 @@ class Config implements UserBackend {
 		return (string) $this->getSXML()->general->logfile;
 	}
 
+	public function getLoglevel(){
+		$llv = (int) $this->getSXML()->general->loglevel;
+		return $llv?$llv:2;
+	}
+
 	public function getDryrun(){
 		return (bool) (int) $this->getSXML()->general->dryrun;
 	}

@@ -2,6 +2,7 @@
 <config> <!-- copy this file to dynbind.conf.xml and insert your data -->
 	<general>
 		<logfile>nsupdate.log</logfile> <!-- path to log file, absolute or relative, if empty no logging is done -->
+		<loglevel>2</loglevel>
 		<dryrun>0</dryrun> <!-- if 1, no updates are done, only logging -->
 		<authmethod>basic</authmethod> <!-- digest or basic http authentification. beware, basic authentication allows password sniffing, but fritzbox does not support digest -->
 	</general>

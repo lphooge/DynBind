@@ -45,7 +45,9 @@ class DynDotComProtocol extends DynProtocol {
 		$this->authenticator = new $this->authenticatorClass($env); // / DigestAuth
 		$auth = $this->authenticator;
 		$user = $this->getUserBackend()->searchUserByName($auth->getUsername());
+		log::write("user {$auth->getUsername()} requests login...", 3);
 		$auth->authenticate($user->name, $user->credentials);
+		log::write("user {$auth->getUsername()} logged in.", 3);
 		$this->user = $user;
 
 		$hosts = empty($get['hostname'])?array():explode(',', $get['hostname']);

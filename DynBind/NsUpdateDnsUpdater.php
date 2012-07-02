@@ -15,7 +15,6 @@ class NsUpdateDnsUpdater extends DnsUpdater{
 	public $zone = "dyn.example.invalid";
 	public $keyfile = null;
 	public $dryrun = false;
-	public $logfile = "log.txt";
 	public $ttl = 3600;
 
 	public function __construct($nameserver, $zone, $keyfile){
@@ -28,7 +27,7 @@ class NsUpdateDnsUpdater extends DnsUpdater{
 		try{
 			$entry->validate();
 		} catch(Exception $e){
-			echo $e->getMessage(); // FIXME
+			log::write('rejected invalid dns entry: '.$e->getMessage(), 2);
 			return new UpdateStatus(UpdateStatus::STATUS_UPDATE_ERROR, $entry);
 		}
 
@@ -44,25 +43,25 @@ class NsUpdateDnsUpdater extends DnsUpdater{
 			"send".$nl.
 			"";
 		if(!file_put_contents($updatefile, $update)){
+			log::write("could not write temp-file for nsupdate ($updatefile)", 1);
 			return new UpdateStatus(UpdateStatus::STATUS_UPDATE_ERROR, $entry);
 		}
 		$cmd = "nsupdate ".($this->keyfile?'-k '.$this->keyfile:'')." -v $updatefile";
 		if($this->dryrun){
-			if($this->logfile){
-				file_put_contents($this->logfile, $update, FILE_APPEND);
-				file_put_contents($this->logfile, $cmd."\n", FILE_APPEND);
-			}
+			log::write($cmd, 3);
+			log::write($update, 2);
 			unlink($updatefile);
 			return new UpdateStatus(UpdateStatus::STATUS_NO_CHANGE, $entry);
 		} else {
+			log::write($cmd, 3);
+			log::write($update, 3);
 			exec($cmd, $output, $return_var);
 			unlink($updatefile);
-			if($this->logfile){
-				file_put_contents($this->logfile, implode("\n",$output)."\n", FILE_APPEND);
-			}
+			log::write(implode("\n",$output), 2);
 			if($return_var == 0){
 				return new UpdateStatus(UpdateStatus::STATUS_SUCCESS, $entry);
 			}
+			log::write("nsupdate returned error code $return_var", 1);
 		}
 		return new UpdateStatus(UpdateStatus::STATUS_INTERNAL_ERROR, $entry);
 	}
