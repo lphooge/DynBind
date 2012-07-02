@@ -31,7 +31,7 @@ class NsUpdateDnsUpdater extends DnsUpdater{
 			return new UpdateStatus(UpdateStatus::STATUS_UPDATE_ERROR, $entry);
 		}
 
-		$updatefile = uniqid('zupd-');
+		$updatefile = tempnam(sys_get_temp_dir(),'zupd-');
 		$nl = "\n";
 		$ttl = $entry->ttl?$entry->ttl:$this->ttl;
 		$update =
