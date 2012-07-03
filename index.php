@@ -29,7 +29,10 @@ log::setLevel($conf->getLoglevel());
 
 // Init Input Protocols
 $protocol = new DynDotComProtocol($conf);
-$protocol->setAuthMethod($conf->getAuthMethod()=='basic'?DynDotComProtocol::AUTH_BASIC:DynDotComProtocol::AUTH_DIGEST);
+foreach($conf->getAuthMethods() as $method){
+	$protocol->addAuthMethod($method=='basic'?DynDotComProtocol::AUTH_BASIC:DynDotComProtocol::AUTH_DIGEST);
+}
+$protocol->setAuthRealm($conf->getAuthRealm());
 
 try{
 	$protocol->parseRequest($_SERVER, $_GET, $_POST);
@@ -51,9 +54,13 @@ try{
 		}
 	}
 	$protocol->answerRequest($update_stati);
+	log::write("send headers:\n".implode("\n",headers_list()), 4);
 	exit();
 } catch(Exception $e){
 	log::write($e->getMessage(), 3);
 	$protocol->answerRequest(array(new UpdateStatus($e->getCode())));
+	log::write("send headers:\n".implode("\n",headers_list()), 4);
 	exit();
 }
+
+

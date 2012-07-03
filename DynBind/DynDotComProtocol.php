@@ -29,26 +29,44 @@ class DynDotComProtocol extends DynProtocol {
 	const AUTH_BASIC = 'BasicHttpAuth';
 	const AUTH_DIGEST = 'DigestHttpAuth';
 
-	protected $authenticatorClass = self::AUTH_DIGEST;
-	protected $authenticator = null;
+	protected $authenticatorClasses =  array();
+	protected $authenticatorRealm = null;
+	protected $authenticators = array();
+	protected $success_authenticator = null;
 
-	public function setAuthMethod($methodClass){
+	public function addAuthMethod($methodClass){
 		if(!is_subclass_of($methodClass, 'HttpAuth')){
 			throw new Exception("invalid authenticator $methodClass");
 		}
-		$this->authenticatorClass = $methodClass;
+		$this->authenticatorClasses[] = $methodClass;
+	}
+
+	public function setAuthRealm($realm){
+		$this->authenticatorRealm = $realm;
+		return $this;
 	}
 
 	public function parseRequest($env=array(), $get=array(), $post=array()){
 		$this->user = null;
 
-		$this->authenticator = new $this->authenticatorClass($env); // / DigestAuth
-		$auth = $this->authenticator;
-		$user = $this->getUserBackend()->searchUserByName($auth->getUsername());
-		log::write("user {$auth->getUsername()} requests login...", 3);
-		$auth->authenticate($user->name, $user->credentials);
-		log::write("user {$auth->getUsername()} logged in.", 3);
-		$this->user = $user;
+		foreach($this->authenticatorClasses as $ac){
+			try{
+				$auth = new $ac($env, $this->authenticatorRealm);
+				$this->authenticators[] = $auth;
+				$user = $this->getUserBackend()->searchUserByName($auth->getUsername());
+				log::write("user {$auth->getUsername()} requests login...", 3);
+				$auth->authenticate($user->name, $user->credentials);
+				log::write("user {$auth->getUsername()} logged in using using ".get_class($auth).'.', 3);
+				$this->success_authenticator = $auth;
+				$this->user = $user;
+				break;
+			} catch(Exception $e){
+				continue;
+			}
+		}
+		if(empty($this->user)){
+			throw new Exception("no valid user login", UpdateStatus::STATUS_AUTH_ERROR);
+		}
 
 		$hosts = empty($get['hostname'])?array():explode(',', $get['hostname']);
 		if(empty($hosts)){
@@ -95,10 +113,14 @@ class DynDotComProtocol extends DynProtocol {
 	 */
 	public function answerRequest($statusmsgs){
 		header('Content-Type: text/plain');
-		if(empty($this->user)){
-			$this->authenticator->sendFailedHeaders();
-		} else {
-			$this->authenticator->sendSuccessHeaders();
+
+		if($this->success_authenticator){
+			$this->success_authenticator->sendSuccessHeaders();
+		} elseif(!empty($this->authenticators)){
+			foreach($this->authenticators as $auth){
+				log::write("requesting login using ".get_class($auth), 3);
+				$auth->sendFailedHeaders();
+			}
 		}
 
 		foreach($statusmsgs as $statusmsg){ /* var $statusmsg UpdateStatus */

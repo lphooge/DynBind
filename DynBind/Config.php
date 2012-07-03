@@ -99,33 +99,20 @@ class Config implements UserBackend {
 		return $zones;
 	}
 
-	public function getAuthMethod(){
-		return (string) $this->getSXML()->general->authmethod;
+	public function getAuthMethods(){
+		$methods = array();
+		foreach($this->getSXML()->general->authentication->method as $em){
+			$methods[] = strtolower(trim((string) $em));
+		}
+		if(empty($methods)){
+			return array('digest', 'basic');
+		}
+		return $methods;
 	}
 
-	public function getUsername(){
-		return (string) $this->getSXML()->users->user->attributes()->name;
-	}
-
-	public function getPassword(){
-		return (string) $this->getSXML()->users->user->attributes()->password;
-	}
-
-	public function getNameserver(){
-		return (string) $this->getSXML()->zones->zone->nameserver;
-	}
-
-	public function getZone(){
-		return (string) $this->getSXML()->zones->zone->attributes()->name;
-	}
-
-	public function getKeyfile(){
-		return (string) (string) $this->getSXML()->zones->zone->keyfile;
-	}
-
-	public function getTTL(){
-		$ttl = (int) $this->getSXML()->zones->zone->ttl;
-		return $ttl?$ttl:3600;
+	public function getAuthRealm(){
+		$realm = trim((string) $this->getSXML()->general->authentication->realm);
+		return $realm?$realm:'DynBind Dynamic DNS Updater';
 	}
 
 	public function getLogfile(){
