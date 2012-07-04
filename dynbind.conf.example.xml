@@ -20,7 +20,7 @@
 			<hostname>*.invalid.inv</hostname> 
 			<hostname>otherwiseinvalid.inv</hostname>
 		</user>
-		<user name="dummy"> <-- no password currently means empty password, use with care -->
+		<user name="dummy"> <!-- no password currently means empty password, use with care -->
 			<hostname>*.foo.invalid.inv</hostname>
 		</user>
 	</users>

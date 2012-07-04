@@ -27,7 +27,7 @@ In particular:
 
 1. copy the included files somewhere where your webserver can access than.
 
-2. copy the included dynbind.conf.xml.example to dynbind.conf.xml or /etc/dynbind.conf.xml and insert your settings (users, zone, name server etc, see comments there).
+2. copy the included dynbind.conf.example.xml to dynbind.conf.xml or /etc/dynbind.conf.xml and insert your settings (users, zone, name server etc, see comments there).
 IMPORTANT: make sure for Apache "AllowOverride All" is enabled, or use other means to disallow the webserver from serving the config und log files to visitors!
 Alternatively place the config in /etc/dynbind.conf.xml instead in the directory with the script
 

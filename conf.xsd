@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="config" type="configType"/>
+  <xs:complexType name="authenticationType">
+    <xs:sequence>
+      <xs:element name="method" maxOccurs="unbounded" minOccurs="0">
+        <xs:simpleType>
+          <xs:restriction base="xs:token">
+            <xs:enumeration value="digest"/>
+            <xs:enumeration value="basic"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element type="xs:normalizedString" name="realm"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="generalType">
+    <xs:all>
+      <xs:element type="xs:token" name="logfile"/>
+      <xs:element type="xs:byte" name="loglevel"/>
+      <xs:element type="xs:boolean" name="dryrun" default="0"/>
+      <xs:element type="authenticationType" name="authentication"/>
+    </xs:all>
+  </xs:complexType>
+  <xs:complexType name="userType">
+    <xs:sequence>
+      <xs:element type="hostnameType" name="hostname" maxOccurs="unbounded" minOccurs="0"/>
+    </xs:sequence>
+    <xs:attribute type="xs:token" name="name" use="required"/>
+    <xs:attribute type="xs:token" name="password" use="optional"/>
+  </xs:complexType>
+  <xs:complexType name="usersType">
+    <xs:sequence>
+      <xs:element type="userType" name="user" maxOccurs="unbounded" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="zoneType">
+    <xs:sequence>
+      <xs:element type="xs:token" name="keyfile"/>
+      <xs:element type="xs:token" name="nameserver"/>
+      <xs:element type="xs:positiveInteger" name="ttl" default="1800"/>
+      <xs:element type="xs:boolean" name="dryrun" default="0" />
+    </xs:sequence>
+    <xs:attribute type="xs:token" name="name" use="required"/>
+  </xs:complexType>
+  <xs:complexType name="zonesType">
+    <xs:sequence>
+      <xs:element type="zoneType" name="zone" maxOccurs="unbounded" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="configType">
+    <xs:all>
+      <xs:element type="generalType" name="general" minOccurs="1"/>
+      <xs:element type="usersType" name="users" minOccurs="0"/>
+      <xs:element type="zonesType" name="zones" minOccurs="1"/>
+    </xs:all>
+  </xs:complexType>
+  <xs:simpleType name="hostnameType">
+	<xs:restriction base="xs:token">
+	  <xs:pattern value="(\*\.){0,1}([A-Za-z0-9\-]+\.)*([A-Za-z0-9\-]+)" />
+	</xs:restriction>
+  </xs:simpleType>
+</xs:schema>

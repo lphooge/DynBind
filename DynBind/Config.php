@@ -12,6 +12,11 @@ class Config implements UserBackend {
 	 */
 	protected $sxml = null;
 
+	/**
+	 * @var DOMDocument
+	 */
+	protected $dom = null;
+
 	protected $loaded = false;
 
 	public function __construct($xmlfile=null){
@@ -129,6 +134,7 @@ class Config implements UserBackend {
 	}
 
 	public function load($xmlfile){
+		$this->loaded = false;
 		if(!file_exists($xmlfile)){
 			throw new Exception("config file doesn't exist");
 		}
@@ -138,7 +144,32 @@ class Config implements UserBackend {
 			throw new Exception("could not load config XML file");
 		}
 		$this->sxml = $sxml;
+
+		$dom = new DOMDocument();
+		$dom->load($xmlfile);
+		$this->dom = $dom;
 		$this->loaded = true;
+
+		if(!$this->validate($validation_errors)){
+			foreach($validation_errors as $error){
+				log::write("error in $xmlfile: ".$error, 1);
+			}
+		}
+		return $this->loaded;
+	}
+
+	protected function validate(&$errors){
+		libxml_use_internal_errors(true);
+		libxml_clear_errors();
+		$valid = true;
+		if(!$this->dom->schemaValidate(dirname(__FILE__).'/../conf.xsd')){
+			$valid = false;
+			foreach(libxml_get_errors() as $error){
+				$errors[] = $error->message;
+			}
+		}
+		libxml_clear_errors();
+		return $valid;
 	}
 
 	public function save(){
