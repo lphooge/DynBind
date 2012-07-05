@@ -87,7 +87,8 @@ class Config implements UserBackend {
 			$name = (string) $e->attributes()->name;
 			$nameserver = (string) $e->nameserver;
 			$keyfile = (string) $e->keyfile;
-			$ttl = (string) $e->ttl;
+			$ttl = (int) (string) $e->ttl;
+			$ttl = $ttl?$ttl:1800;
 
 			$dryrun = $global_dryrun?true:((bool) (int) $e->dryrun);
 
