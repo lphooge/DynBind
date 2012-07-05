@@ -16,10 +16,10 @@
   </xs:complexType>
   <xs:complexType name="generalType">
     <xs:all>
-      <xs:element type="xs:token" name="logfile"/>
-      <xs:element type="xs:byte" name="loglevel"/>
-      <xs:element type="xs:boolean" name="dryrun" default="0"/>
-      <xs:element type="authenticationType" name="authentication"/>
+      <xs:element type="xs:token" name="logfile" minOccurs="0"/>
+      <xs:element type="xs:byte" name="loglevel" minOccurs="0"/>
+      <xs:element type="xs:boolean" name="dryrun" minOccurs="0"/>
+      <xs:element type="authenticationType" name="authentication" minOccurs="0"/>
     </xs:all>
   </xs:complexType>
   <xs:complexType name="userType">
@@ -38,8 +38,8 @@
     <xs:sequence>
       <xs:element type="xs:token" name="keyfile"/>
       <xs:element type="xs:token" name="nameserver"/>
-      <xs:element type="xs:positiveInteger" name="ttl" default="1800"/>
-      <xs:element type="xs:boolean" name="dryrun" default="0" />
+      <xs:element type="xs:positiveInteger" name="ttl"/>
+      <xs:element type="xs:boolean" name="dryrun"/>
     </xs:sequence>
     <xs:attribute type="xs:token" name="name" use="required"/>
   </xs:complexType>
