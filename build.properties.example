@@ -1,3 +1,4 @@
 remote.user=joedoe
 remote.host=mypublicserver.net
 remote.path=/var/www/dynbind/
+rsync.exclude-from=.gitignore

@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="DynBind" default="deploy" basedir=".">
 	<property file="build.properties" />
+	<property name="rsync.exclude-from" value=".gitignore" />
+	
 	<description>
 		DynBind script
 	</description>
@@ -16,7 +18,7 @@
 			<arg line="${remote.user}@${remote.host} 'chmod -R 777 ${remote.path}'" />
 		</exec>
 		<exec dir="." executable="rsync" failonerror="true">
- 			<arg line=" --omit-dir-times -rlzv --no-p --no-o --no-g --exclude '.git' --exclude-from '.gitignore' -e ssh . ${remote.user}@${remote.host}:${remote.path}" />
+ 			<arg line=" --omit-dir-times -rlzv --no-p --no-o --no-g --exclude '.git' --exclude-from ${rsync.exclude-from} -e ssh . ${remote.user}@${remote.host}:${remote.path}" />
 		</exec>
 	</target>
 	

@@ -12,3 +12,4 @@
 /internal-notes
 /dynbind.conf.xml
 DynBind/Plugins
+.local.*
