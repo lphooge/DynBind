@@ -4,6 +4,7 @@
 */
 class Zone{
 	public $name = null;
+	public $updaterclass = null;
 	public $nameserver = null;
 	public $keyfile = null;
 	public $ttl = null;
@@ -21,7 +22,19 @@ class Zone{
 	 */
 	public function getUpdater(){
 		if($this->updater === null){
-			$dnsupdater = new NsUpdateDnsUpdater($this->nameserver, $this->name, $this->keyfile);
+			if(empty($this->updaterclass) OR $this->updaterclass == 'NsUpdateDnsUpdater'){
+				$dnsupdater = new NsUpdateDnsUpdater($this->nameserver, $this->name, $this->keyfile);
+			} else {
+				$classname = $this->updaterclass;
+				$include_path = dirname(__FILE__).DIRECTORY_SEPARATOR.'Plugins'.DIRECTORY_SEPARATOR.$classname.'.php';
+				if(file_exists($include_path)){
+					include $include_path;
+				}
+				if(!class_exists($classname)){
+					throw new Exception("Updater type '$classname' was not found");
+				}
+				$dnsupdater = new $classname($this->nameserver, $this->name, $this->keyfile);
+			}
 			$dnsupdater->ttl = $this->ttl;
 			$dnsupdater->dryrun = $this->dryrun;
 			$this->updater = $dnsupdater;

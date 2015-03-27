@@ -36,6 +36,7 @@
   </xs:complexType>
   <xs:complexType name="zoneType">
     <xs:sequence>
+     <xs:element type="xs:token" name="updater" minOccurs="0" />
       <xs:element type="xs:token" name="keyfile"/>
       <xs:element type="xs:token" name="nameserver"/>
       <xs:element type="xs:positiveInteger" name="ttl"/>

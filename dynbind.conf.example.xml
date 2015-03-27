@@ -29,6 +29,7 @@
 		List of zones that can be updated.
 		-->
 		<zone name="invalid.inv"> <!-- zone name -->
+			<!-- <updater>CustomDnsUpdater</updater> Use if a custom updater instead of nsupdate should be used, must be placed in DynBind/Plugins and extend DnsUpdater  -->
 			<keyfile /> <!-- key file to use for update, can be empty if updates are allowed without secret, eg for localhost -->
 			<nameserver>ns.invalid.inv</nameserver> <!-- nameserver where the updates are send -->
 			<ttl>1800</ttl> <!-- ttl of the inserted entries, in seconds -->
