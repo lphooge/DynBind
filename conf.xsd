@@ -34,9 +34,16 @@
       <xs:element type="userType" name="user" maxOccurs="unbounded" minOccurs="0"/>
     </xs:sequence>
   </xs:complexType>
+  <xs:complexType name="tokenWithAttributes">
+  	<xs:simpleContent>
+  		<xs:extension base="xs:token">
+  			<xs:anyAttribute processContents="skip" />
+  		</xs:extension>
+	</xs:simpleContent>
+  </xs:complexType>
   <xs:complexType name="zoneType">
     <xs:sequence>
-     <xs:element type="xs:token" name="updater" minOccurs="0" />
+     <xs:element type="tokenWithAttributes" name="updater" minOccurs="0" />
       <xs:element type="xs:token" name="keyfile"/>
       <xs:element type="xs:token" name="nameserver"/>
       <xs:element type="xs:positiveInteger" name="ttl"/>

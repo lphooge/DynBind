@@ -85,7 +85,16 @@ class Config implements UserBackend {
 		$global_dryrun = $this->getDryrun();
 		foreach($this->getSXML()->zones->children() as $e){ /* var $e SimpleXMLElement */
 			$name = (string) $e->attributes()->name;
-			$updater = (string) $e->updater;
+			$updater = null;
+			$updater_options = array();
+			if($e->updater){
+				$updater = (string) $e->updater;
+				foreach($e->updater->attributes() as $key=>$value){
+					$updater_options[$key] = (string) $value;
+				}
+			}
+			
+			
 			$nameserver = (string) $e->nameserver;
 			$keyfile = (string) $e->keyfile;
 			$ttl = (int) (string) $e->ttl;
@@ -103,6 +112,7 @@ class Config implements UserBackend {
 			}
 			if($updater){
 				$zone->updaterclass = $updater;
+				$zone->updateroptions = $updater_options;
 			}
 			$zones[] = $zone;
 		}

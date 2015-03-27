@@ -5,6 +5,7 @@
 class Zone{
 	public $name = null;
 	public $updaterclass = null;
+	public $updateroptions = array();
 	public $nameserver = null;
 	public $keyfile = null;
 	public $ttl = null;
@@ -35,6 +36,7 @@ class Zone{
 				}
 				$dnsupdater = new $classname($this->nameserver, $this->name, $this->keyfile);
 			}
+			$dnsupdater->setOptions($this->updateroptions);
 			$dnsupdater->ttl = $this->ttl;
 			$dnsupdater->dryrun = $this->dryrun;
 			$this->updater = $dnsupdater;
